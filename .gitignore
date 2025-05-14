@@ -1,0 +1,132 @@
+# Simplified version of gitignore
+
+# Log file
+*.log
+
+# Package Files #
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# C compilation files
+bin/
+obj/
+
+.vs/
+.idea/
+.settings/
+.vscode/
+target/
+build/
+
+*.pdf
+*.dat
+
+.code-workspace
+
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+*.lock
+
+# Ignore image files
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+*.tiff
+*.tif
+*.ico
+*.svg
+*.psd
+*.ai
+*.eps
+*.xcf
+*.webp
+*.heic
+*.heif
+*.raw
+
+# Ignore video files
+*.mp4
+*.avi
+*.mkv
+*.flv
+*.mov
+*.wmv
+*.mpeg
+*.mpg
+*.m4v
+*.webm
+*.ogv
+*.3gp
+*.3g2
+
+# Ignore audio files
+*.mp3
+*.wav
+*.flac
+*.aac
+*.ogg
+*.m4a
+*.wma
+*.aiff
+*.au
+*.amr
+
+# Ignore other multimedia file types
+*.swf
+*.fla
+*.mxf
+*.vob
+*.m2ts
+*.mts
+*.rm
+*.dv
+*.asf
+*.drc
+*.f4v
+*.mng
+*.svi
+*.yuv
+
+# Ignore miscellaneous multimedia formats
+*.mid
+*.midi
+*.kar
+*.mka
+*.ra
+*.ram
+*.voc
+*.opus
+*.qt
+*.ts
+*.srt
+*.ssa
+*.ass
