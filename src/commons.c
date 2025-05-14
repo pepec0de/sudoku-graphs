@@ -18,8 +18,8 @@ void clean(sudoku_t g) {
 
 void printSudoku(sudoku_t g) {
     uint8_t K = N/NS;
-    for (int i = 0; i < N; ++i) {
-        for (int j = 0; j < N; ++j) {
+    for (uint8_t i = 0; i < N; ++i) {
+        for (uint8_t j = 0; j < N; ++j) {
             printf("%d ", g[i][j]);
 
             if ((j + 1) % NS == 0 && j != N - 1) {
@@ -29,8 +29,8 @@ void printSudoku(sudoku_t g) {
         printf("\n");
 
         if ((i + 1) % NS == 0 && i != N - 1) {
-            for (int k = 0; k < K; ++k) {
-                for (int m = 0; m < NS; ++m) {
+            for (uint8_t k = 0; k < K; ++k) {
+                for (uint8_t m = 0; m < NS; ++m) {
                     printf("--");
                 }
 

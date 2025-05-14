@@ -5,6 +5,7 @@
 #include <math.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 #define N (uint8_t) 4
 #define NS (uint8_t)sqrt(N) // N squared

@@ -29,7 +29,7 @@ uint8_t getPossibleSols(sudoku_t sudoku, uint8_t x, uint8_t y, uint8_t* vres) {
     return count;
 }
 
-bool findSolutions(sudoku_t sudoku, sudoku_t* solutions, uint16_t* sol_cont) {
+bool findSolutions(sudoku_t sudoku, SudokuSet solutions_set, uint16_t* sol_cont) {
     // Factor humano: solucion trivial de cada celda
     for (uint8_t i = 0; i < N; ++i) {
         for (uint8_t j = 0; j < N; ++j) {
@@ -67,7 +67,7 @@ bool findSolutions(sudoku_t sudoku, sudoku_t* solutions, uint16_t* sol_cont) {
                 copySudoku(copy, sudoku);
                 copy[i][j] = pSols[k];
 
-                if (!findSolutions(copy, solutions, sol_cont))
+                if (!findSolutions(copy, solutions_set, sol_cont))
                     ++failCont;
             }
 
@@ -78,9 +78,19 @@ bool findSolutions(sudoku_t sudoku, sudoku_t* solutions, uint16_t* sol_cont) {
             return true;
         }
     }
-
+    // Reallocar conjunto antes de que sea realmente necesario
+    if ( *sol_cont == solutions_set.size ) {
+        sudoku_t* ptr = realloc(solutions_set.solutions, solutions_set.size + 100);
+        if (ptr == NULL) {
+            printf("[ERROR] Memory reallocation failed. findSolutions returns false");
+            return false;
+        }
+        
+        solutions_set.solutions = ptr;
+        solutions_set.size += 100;
+    }
     // Solucion encontrada
-    copySudoku(solutions[*sol_cont], sudoku);
+    copySudoku(solutions_set.solutions[*sol_cont], sudoku);
     ++(*sol_cont);
     return true;
 }
