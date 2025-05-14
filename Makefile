@@ -5,16 +5,22 @@ INCDIR := include
 BUILDDIR := obj
 OUTPUTDIR := bin
 TARGET := $(OUTPUTDIR)/app
-CFLAGS := -Wall -Werror
+CFLAGS := -Wall -Werror -I$(INCDIR)
 MAIN := main.c
 
 all: $(TARGET)
 
-$(TARGET): $(BUILDDIR)/main.o
-	$(CC) $(CFLAGS) $^ -o $(TARGET)
+SRC := $(wildcard $(SRCDIR)/*.c)
+OBJ := $(patsubst $(SRCDIR)/%.c,$(BUILDDIR)/%.o,$(SRC))
 
-$(BUILDDIR)/main.o: $(MAIN)
-	$(CC) -c $(MAIN) -o $(BUILDDIR)/main.o
+$(TARGET): $(OBJ) $(BUILDDIR)/main.o | $(OUTPUTDIR)
+	$(CC) $(CFLAGS) $^ -o $@
+
+$(BUILDDIR)/main.o: $(MAIN) | $(BUILDDIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(BUILDDIR)/%.o: $(SRCDIR)/%.c | $(BUILDDIR)
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	@rm $(BUILDDIR)/*.o
