@@ -1,6 +1,5 @@
 #include <sudokugen.h>
 
-
 // Devuelve true si el valor k puede colocarse en la celda (x, y)
 bool isPossible(sudoku_t sudoku, uint8_t x, uint8_t y, uint8_t k) {
     for (uint8_t i = 0; i < N; ++i)  {
