@@ -41,7 +41,7 @@ bool findSolutions(sudoku_t sudoku, SudokuSet* solutions_set, uint16_t* sol_cont
             }
         }
     }
-    printf("recursivo\n");
+    
     for (uint8_t i = 0; i < N; ++i) {
         for (uint8_t j = 0; j < N; ++j) {
             if (sudoku[i][j] != 0)
@@ -63,7 +63,7 @@ bool findSolutions(sudoku_t sudoku, SudokuSet* solutions_set, uint16_t* sol_cont
             for (uint8_t k = 0; k < pSols_sz; ++k) {
                 sudoku_t copy;
 
-                copySudoku(copy, sudoku);
+                memcpy(copy, sudoku, sizeof(sudoku_t));
                 copy[i][j] = pSols[k];
 
                 if (!findSolutions(copy, solutions_set, sol_cont, verbose))
@@ -77,21 +77,20 @@ bool findSolutions(sudoku_t sudoku, SudokuSet* solutions_set, uint16_t* sol_cont
             return true;
         }
     }
-    printf("reallocar\n");
+
     // Reallocar conjunto antes de que sea realmente necesario
-    if ( *sol_cont == solutions_set.size ) {
-        sudoku_t* ptr = realloc(solutions_set.solutions, solutions_set.size + 100);
+    if ( *sol_cont == solutions_set->size ) {
+        sudoku_t* ptr = realloc(solutions_set->solutions, solutions_set->size + 100);
         if (ptr == NULL) {
             if (verbose) printf("[ERROR] Memory reallocation failed. findSolutions returns false\n\n");
             return false;
         }
         
-        solutions_set.solutions = ptr;
-        solutions_set.size += 100;
+        solutions_set->solutions = ptr;
+        solutions_set->size += 100;
     }
     // Solucion encontrada
-    printf("copySudoku\n");
-    copySudoku(solutions_set.solutions[*sol_cont], sudoku);
+    copySudoku(solutions_set->solutions[*sol_cont], sudoku);
     ++(*sol_cont);
     if (verbose) printf("sol_cont = %d", *sol_cont);
     return true;
