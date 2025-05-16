@@ -34,9 +34,10 @@ int main() {
     free(sol_cont);
     free(solutions_set);
 
-    Graph graph = initGraph(base);
-    printSudoku(graph.sudoku);
+    GraphSet* graph = initGraph(base);
+    printSudoku(graph->sudoku);
 
-    free(graph.solutions);
+    free(graph->solutions);
+    free(graph);
     return 0;
 }
