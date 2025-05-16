@@ -18,6 +18,15 @@ typedef uint8_t sudoku_t[N][N];
 // sizeof(bool) = 1 byte
 typedef bool adjm_t[GRAPH_ORDER][GRAPH_ORDER];
 
+
+/*
+    Idea for adjm_t type:
+    bitfields
+
+    typedef struct {
+        uint64_t* mat : GRAPH_ORDER;
+    } adjm_t;
+*/
 void copySudoku(sudoku_t g1, sudoku_t g2);
 void clean(sudoku_t g);
 void printSudoku(sudoku_t g);
