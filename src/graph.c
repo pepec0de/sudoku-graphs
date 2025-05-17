@@ -12,6 +12,7 @@ GraphSet* initGraph(sudoku_t sudoku) {
     graph->solutions = malloc(graph->solutions_size * sizeof(adjm_t));
     
     for (uint8_t c = 0; c < GRAPH_ORDER; ++c) {
+        // valueOfCell method
         uint8_t i = c / N, j = c % N;
         graph->labels[c] = sudoku[i][j];
     }
@@ -31,20 +32,24 @@ void searchGraphs(adjm_t graph, GraphSet* graph_set, uint8_t start, bool verbose
      * Comprobar numero de 1's por cada nodo
         (como es matriz simetrica no hay comprobar columnas aparte)
         * Lo primero que hacemos es descartar el grafo actual por si hay
-        * alguna adyacencia mal puesta (puede pasar por el tema de la simetr�a)
+        * alguna adyacencia mal puesta (puede pasar por el tema de la simetria)
     ***/
+   // Comprobacion grafo invalido
     for (uint8_t i = 0; i < GRAPH_ORDER; ++i) {
         uint8_t n_ones = 0;
         for (uint8_t j = 0; j < GRAPH_ORDER; ++j) {
             if (graph[i][j]) ++n_ones;
         }
-        if (n_ones > valueOfCell(i))
+        if (n_ones > graph_set->labels[i])
+            // El nodo actual tiene mas aristas que las que debe tener -> descartado
             return;
-    }
+    } // Todo esta comprobacion se podria combinar con la de abajo para mayor eficiencia
+    // TODO : probar idea de arriba
 
+    // Comprobacion grafo completo
     bool grafoCompleto = true;
     for (uint8_t i = 0; i < GRAPH_ORDER; ++i) {
-        int8_t grado = valueOfCell(i);
+        int8_t grado = graph_set->labels[i];
         uint8_t cont = 0;
         for (uint8_t j = 0; j < GRAPH_ORDER; ++j) {
             cont += graph[i][j];
@@ -62,13 +67,15 @@ void searchGraphs(adjm_t graph, GraphSet* graph_set, uint8_t start, bool verbose
             //system("pause");
         }
         copyAdjm(graph_set->solutions[graph_set->n_solutions++], graph);
-        /*if (n_solutions == sz_solutions) {
+        /*
+        // Aumentar capacidad conjunto de soluciones
+        if (n_solutions == sz_solutions) {
             adjm* new_solutions = new adjm[sz_solutions + 10*N];
             for (int i = 0; i < n_solutions; ++i) {
                 copyAdjm(new_solutions[i], solutions[i]);
-            }
-            delete [] solutions;
-            solutions = new_solutions;
+        }
+        delete [] solutions;
+        solutions = new_solutions;
         }*/
         return;
     }
@@ -85,7 +92,7 @@ void searchGraphs(adjm_t graph, GraphSet* graph_set, uint8_t start, bool verbose
 
         ***/
         // TRABAJAMOS DETRAS DE LA DIAGONAL (VAMOS DE MAS A MENOS)
-        int n_ones = valueOfCell(start), k_bits = 0;
+        int n_ones = graph_set->labels[start], k_bits = 0;
 
         // Buscamos 1's delante de la diagonal
         //  En cada fila (i) solo podemos tener tantos 1's como valueOfCell(i)
@@ -94,13 +101,17 @@ void searchGraphs(adjm_t graph, GraphSet* graph_set, uint8_t start, bool verbose
 
         if (n_ones == 0) {
             // Se salta a la siguiente fila
+            /*
+                TODO : Probar idea de hacer directamente ++start y reajustar el parametro n_ones
+                para no tener que hacer la comprobacion de grafoCompleto y grafo no valido
+            */
             generateGraph(graph, start+1, verbose);
             return;
         }
 
-        // esto se puede calcular una vez y guardar en una matriz
+        // Esto se puede calcular una vez y guardar en una matriz
         for (int j = start+1; j < GRAPH_ORDER; ++j)
-            if (valueOfCell(start) != valueOfCell(j)) ++k_bits;
+            if (graph_set->labels[start] != graph_set->labels[j]) ++k_bits;
 
         if (k_bits != 0) {
             BinarySequences binseqs(k_bits, n_ones);
