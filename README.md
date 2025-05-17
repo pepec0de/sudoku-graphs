@@ -7,7 +7,7 @@ Graph structures based on sudoku's concepts
 * Change the arguments to pass by reference when necessary (optimization in runtime).
 * Implement graph search algorithm.
 * ~~Add in GraphSet labels vector to remove valueOfCell function.~~
-* Implement sub-algo for binary sequences generation.
+* ~~Implement sub-algo for binary sequences generation.~~
 * Add code for graphical plots of graphs.
 * Add in GraphSet struct k_bits matrix to optimize algorithm.
 
