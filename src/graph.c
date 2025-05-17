@@ -8,7 +8,9 @@ GraphSet* initGraph(sudoku_t sudoku) {
     printf("Testing memcpy\n");
     printSudoku(graph->sudoku);
 
-    graph->solutions_size = 1000;
+    graph->n_solutions = 0;
+
+    graph->solutions_size = 150;
     graph->solutions = malloc(graph->solutions_size * sizeof(adjm_t));
     
     for (uint8_t c = 0; c < GRAPH_ORDER; ++c) {
@@ -20,10 +22,10 @@ GraphSet* initGraph(sudoku_t sudoku) {
     return graph;
 }
 
-void copyAdjm(adjm_t a1, adjm_t a2) {
+void cleanAdjm(adjm_t a1) {
     for (uint8_t i = 0; i < GRAPH_ORDER; ++i)
         for (uint8_t j = 0; j < GRAPH_ORDER; ++j)
-            a1[i][j] = a2[i][j];
+            a1[i][j] = 0;
 }
 
 void searchGraphs(adjm_t graph, GraphSet* graph_set, uint8_t start, bool verbose) {
@@ -49,7 +51,7 @@ void searchGraphs(adjm_t graph, GraphSet* graph_set, uint8_t start, bool verbose
     // Comprobacion grafo completo
     bool grafoCompleto = true;
     for (uint8_t i = 0; i < GRAPH_ORDER; ++i) {
-        int8_t grado = graph_set->labels[i];
+        uint8_t grado = graph_set->labels[i];
         uint8_t cont = 0;
         for (uint8_t j = 0; j < GRAPH_ORDER; ++j) {
             cont += graph[i][j];
@@ -62,22 +64,17 @@ void searchGraphs(adjm_t graph, GraphSet* graph_set, uint8_t start, bool verbose
 
     if (grafoCompleto) {
         if (verbose) {
-            printf("[VERBOSE] GRAPH %d", graph_set->n_solutions);
-            printAdjm(graph, " ");
+            printf("[VERBOSE] GRAPH %d\n", graph_set->n_solutions);
+            printGraph(graph, graph_set);
             //system("pause");
         }
-        copyAdjm(graph_set->solutions[graph_set->n_solutions++], graph);
-        /*
-        // Aumentar capacidad conjunto de soluciones
-        if (n_solutions == sz_solutions) {
-            adjm* new_solutions = new adjm[sz_solutions + 10*N];
-            for (int i = 0; i < n_solutions; ++i) {
-                copyAdjm(new_solutions[i], solutions[i]);
+        memcpy(graph_set->solutions[graph_set->n_solutions++], graph, sizeof(adjm_t));
+        
+        // TODO: Aumentar capacidad conjunto de soluciones
+        if (graph_set->n_solutions == graph_set->solutions_size) {
+            exit(0); // temporal
+            return;
         }
-        delete [] solutions;
-        solutions = new_solutions;
-        }*/
-        return;
     }
 
     if (start != GRAPH_ORDER-1) {
@@ -105,7 +102,7 @@ void searchGraphs(adjm_t graph, GraphSet* graph_set, uint8_t start, bool verbose
                 TODO : Probar idea de hacer directamente ++start y reajustar el parametro n_ones
                 para no tener que hacer la comprobacion de grafoCompleto y grafo no valido
             */
-            generateGraph(graph, start+1, verbose);
+           searchGraphs(graph, graph_set, start+1, verbose);
             return;
         }
 
@@ -114,14 +111,55 @@ void searchGraphs(adjm_t graph, GraphSet* graph_set, uint8_t start, bool verbose
             if (graph_set->labels[start] != graph_set->labels[j]) ++k_bits;
 
         if (k_bits != 0) {
-            BinarySequences binseqs(k_bits, n_ones);
-            for (int j = 0; j < binseqs.getN(); ++j) {
-                adjm cGraph;
-                copyAdjm(cGraph, graph);
-                apply_binary_seq(cGraph, binseqs.getSequences()[j], start);
+            BinSeqs* bin_seqs = getSequences(k_bits, n_ones);
+            for (int_seq_t j = 0; j < bin_seqs->n; ++j) {
+                adjm_t cGraph;
+                memcpy(cGraph, graph, sizeof(adjm_t));
+                apply_binary_seq(cGraph, graph_set, bin_seqs->table[j], &start);
                 // Caso recursivo
-                generateGraph(cGraph, start+1, verbose);
+                searchGraphs(cGraph, graph_set, start+1, verbose);
             }
+            free_BinSeqs(bin_seqs);
         }
     }
+}
+
+void apply_binary_seq(adjm_t graph, GraphSet* graph_set, bool* bin_seq, uint8_t* idx) {
+    uint8_t i_seq = 0;
+    for (uint8_t j = (*idx) + 1; j < GRAPH_ORDER; ++j)
+        if (graph_set->labels[*idx] != graph_set->labels[j])
+            set(graph, idx, &j, bin_seq[i_seq++]);
+}
+
+void set(adjm_t graph, uint8_t* i, uint8_t* j, bool x) {
+    graph[*i][*j] = x;
+    graph[*j][*i] = x;
+}
+
+void printGraph(adjm_t graph, GraphSet* graph_data) {
+    // Cabecera con los valores
+    printf("         ");
+    for (int i = 0; i < GRAPH_ORDER; i++) {
+        printf("%d,", graph_data->labels[i]);
+    }
+    printf("\n         ");
+    for (int i = 0; i < GRAPH_ORDER; i++) {
+        printf("%d ", (i + 1) % 10);
+    }
+    printf("\n");
+
+    // Filas del grafo
+    for (int i = 0; i < GRAPH_ORDER; ++i) {
+        printf("(%d), %d : ", graph_data->labels[i], (i + 1) % 10);
+        for (int j = 0; j < GRAPH_ORDER; ++j) {
+            if (graph[i][j] || i == j || graph_data->labels[i] == graph_data->labels[j]) {
+                printf("%d ", graph[i][j]);
+            } else {
+                printf("  ");
+            }
+        }
+        printf("\n");
+    }
+
+    printf("\n");
 }

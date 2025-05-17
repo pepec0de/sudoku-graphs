@@ -2,7 +2,7 @@
 #include <sudokugen.h>
 #include <graph.h>
 
-int main() {
+int sudoku_graph_test() {
     printf("Hello, World! %ld\n", sizeof(uint8_t));
     printf("N = %d\nNS = %d\n", N, NS);
 
@@ -36,8 +36,39 @@ int main() {
 
     GraphSet* graph = initGraph(base);
     printSudoku(graph->sudoku);
+    adjm_t adjm;
+
+    cleanAdjm(adjm);
+
+    searchGraphs(adjm, graph, 0, true);
 
     free(graph->solutions);
     free(graph);
     return 0;
+}
+
+int test_binseqs() {
+
+    uint8_t n, k;
+    scanf("%hhu", &n);
+    scanf("%hhu", &k);
+
+    BinSeqs* bin_seqs = getSequences(n, k);
+
+    for (int_seq_t idx = 0; idx < bin_seqs->n; ++idx) {
+        for (uint8_t i = 0; i < n; ++i) {
+            printf("%d", bin_seqs->table[idx][i]);
+        }
+        printf("\n");
+    }
+
+    printf("N = %d\n", bin_seqs->n);
+
+    free_BinSeqs(bin_seqs);
+    return 0;
+}
+
+
+int main() {
+    return sudoku_graph_test();
 }

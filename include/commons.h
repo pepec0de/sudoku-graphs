@@ -8,10 +8,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define N (uint8_t) 3
+#define N (uint8_t) 4
 #define NS (uint8_t) sqrt(N) // N squared
 #define GRAPH_ORDER (uint8_t) N*N
 #define N_EDGES (uint8_t) ceil((N*N*(N+1))/4.0)
+
+// tipo para binaryseq
+typedef uint32_t int_seq_t;
 
 // sizeof(uint8_t) = 1 byte
 typedef uint8_t sudoku_t[N][N];
