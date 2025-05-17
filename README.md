@@ -3,6 +3,7 @@ Graph structures based on sudoku's concepts
 
 ## TODO List
 
+* Check graph search algorithm results (for N=3 |graphs set| = 92) compare with older versions.
 * ~~Code memory reallocation for solutions vector (SudokuSet)~~.
 * Change the arguments to pass by reference when necessary (optimization in runtime).
 * ~~Implement graph search algorithm~~.
