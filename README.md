@@ -21,3 +21,40 @@ Graph structures based on sudoku's concepts.
 
 
 Thanks to Antonio.
+
+Simple graph search algorithm using backtracking:
+
+```
+function countValidGraphs(sudokuLabels):
+    total_nodes = N * N
+    degrees = array[total_nodes] filled with 0
+    required_degrees = map each node -> its label from sudokuLabels
+    adjacency = matrix[total_nodes][total_nodes] filled with 0
+    return backtrack(0, 1, adjacency, degrees, required_degrees)
+
+function backtrack(u, v, adjacency, degrees, required_degrees):
+    if all degrees match required_degrees:
+        return 1
+
+    if u >= total_nodes:
+        return 0
+    if v >= total_nodes:
+        return backtrack(u + 1, u + 2, adjacency, degrees, required_degrees)
+
+    count = 0
+
+    # Try adding edge (u, v) if valid
+    if labels[u] ≠ labels[v] and degrees[u] < required_degrees[u] and degrees[v] < required_degrees[v]:
+        add edge (u, v) to adjacency
+        degrees[u] += 1
+        degrees[v] += 1
+        count += backtrack(u, v + 1, adjacency, degrees, required_degrees)
+        remove edge (u, v)
+        degrees[u] -= 1
+        degrees[v] -= 1
+
+    # Try without adding the edge
+    count += backtrack(u, v + 1, adjacency, degrees, required_degrees)
+
+    return count
+```

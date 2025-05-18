@@ -1,6 +1,6 @@
-#include <commons.h>
 #include <sudokugen.h>
 #include <graph.h>
+#include <bitfield.h>
 
 int sudoku_graph_test() {
     bool verbose = true;
@@ -28,17 +28,28 @@ int sudoku_graph_test() {
     free(sol_cont);
     free(solutions_set);
 
-    GraphSet* graph = initGraph(base);
+    GraphSet* graph_set = initGraph(base);
     adjm_t adjm;
 
     cleanAdjm(adjm);
 
-    searchGraphs(adjm, graph, 0, verbose);
+    printGraph(adjm, graph_set);
 
-    printf("\n\nN GRAPHS = %d\n\n", graph->n_solutions);
+    searchGraphs(adjm, graph_set, 0, verbose);
 
-    free(graph->solutions);
-    free(graph);
+    printf("\n\nN GRAPHS = %d\n\n", graph_set->n_solutions);
+
+    printf("##########################################\n\nCOMPARE\n\n");
+    //printf("N UNIQUES = %d\n\n", compareSet(graph_set));
+
+
+    int_set_t uniques = compareEqualSet(graph_set);
+
+    printf("\n\nN UNIQUE GRAPHS!!!! = %d\n\n", uniques);
+
+    free(graph_set->solutions);
+    free(graph_set);
+
     return 0;
 }
 
