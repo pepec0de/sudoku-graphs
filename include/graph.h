@@ -10,6 +10,8 @@ typedef struct {
     uint16_t n_solutions;
     uint16_t solutions_size;
     uint8_t labels[GRAPH_ORDER];
+    uint8_t k_bits_vct[GRAPH_ORDER-1];
+    // Se omite el ultimo nodo -> no tiene nada a su izquierda
 } GraphSet;
 
 GraphSet* initGraph(sudoku_t sudoku);

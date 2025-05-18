@@ -90,8 +90,7 @@ bool findSolutions(sudoku_t sudoku, SudokuSet* solutions_set, uint16_t* sol_cont
         solutions_set->size += 100;
     }
     // Solucion encontrada
-    copySudoku(solutions_set->solutions[*sol_cont], sudoku);
+    memcpy(solutions_set->solutions[*sol_cont], sudoku, sizeof(sudoku_t));
     ++(*sol_cont);
-    if (verbose) printf("sol_cont = %d", *sol_cont);
     return true;
 }

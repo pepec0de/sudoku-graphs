@@ -3,8 +3,9 @@
 #include <graph.h>
 
 int sudoku_graph_test() {
-    printf("Hello, World! %ld\n", sizeof(uint8_t));
-    printf("N = %d\nNS = %d\n", N, NS);
+    bool verbose = true;
+    if (verbose) 
+        printf("N = %d\nNS = %d\n", N, NS);
 
     SudokuSet* solutions_set;
     solutions_set = malloc(sizeof(SudokuSet));
@@ -17,16 +18,9 @@ int sudoku_graph_test() {
     uint16_t* sol_cont = malloc(sizeof(uint16_t));
     *(sol_cont) = 0;
 
-    printf("findSolutions\n");
-    findSolutions(base, solutions_set, sol_cont, true);
+    findSolutions(base, solutions_set, sol_cont, verbose);
 
     printf("N SUDOKUS = %d\n\n", *sol_cont);
-
-    for (uint16_t i = 0; i < 1/**sol_cont*/; ++i) {
-        printf("SUDOKU %d\n", i);
-        printSudoku(solutions_set->solutions[i]);
-        
-    }
     
     memcpy(base, solutions_set->solutions[0], sizeof(sudoku_t));
 
@@ -35,12 +29,13 @@ int sudoku_graph_test() {
     free(solutions_set);
 
     GraphSet* graph = initGraph(base);
-    printSudoku(graph->sudoku);
     adjm_t adjm;
 
     cleanAdjm(adjm);
 
-    searchGraphs(adjm, graph, 0, true);
+    searchGraphs(adjm, graph, 0, verbose);
+
+    printf("\n\nN GRAPHS = %d\n\n", graph->n_solutions);
 
     free(graph->solutions);
     free(graph);

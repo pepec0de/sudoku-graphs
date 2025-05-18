@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define N (uint8_t) 4
+#define N (uint8_t) 3
 #define NS (uint8_t) sqrt(N) // N squared
 #define GRAPH_ORDER (uint8_t) N*N
 #define N_EDGES (uint8_t) ceil((N*N*(N+1))/4.0)
