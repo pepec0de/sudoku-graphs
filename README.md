@@ -3,14 +3,14 @@ Graph structures based on sudoku's concepts.
 
 ## TODO List
 
-* Check graph search algorithm results (for N=3 |graphs set| = 92) compared with older versions (PRIORITY).
+* Check graph search algorithm results (for N=3 |graphs set| = 93 or |graphs set| = 208) compared with older versions (PRIORITY).
 * ~~Code memory reallocation for solutions vector (SudokuSet)~~.
-* Change the arguments to pass by reference when necessary (optimization in runtime).
+* ~~Change the arguments to pass by reference when necessary (optimization in runtime)~~.
 * ~~Implement graph search algorithm~~.
 * ~~Add in GraphSet labels vector to remove valueOfCell function~~.
 * ~~Implement sub-algo for binary sequences generation~~.
-* Add code for graphical plots of graphs (GraphViz lib).
-* Add in GraphSet struct k_bits matrix to optimize algorithm --> Test optimizations in graph search algorithm (PRIORITY).
+* Add code for graphical plots of graphs using GraphViz lib (Python script).
+* ~~Add in GraphSet struct k_bits vector to optimize algorithm~~.
 
 ## List of ideas
 
