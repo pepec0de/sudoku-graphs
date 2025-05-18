@@ -5,7 +5,7 @@ INCDIR := include
 BUILDDIR := obj
 OUTPUTDIR := bin
 TARGET := $(OUTPUTDIR)/app
-CFLAGS := -Wall -I$(INCDIR) #-Werror
+CFLAGS := -Wall -I $(INCDIR) -Werror
 MAIN := main.c
 
 all: $(TARGET)
