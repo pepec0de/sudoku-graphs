@@ -5,7 +5,7 @@ INCDIR := include
 BUILDDIR := obj
 OUTPUTDIR := bin
 TARGET := $(OUTPUTDIR)/app
-CFLAGS := -Wall -I $(INCDIR) -Werror
+CFLAGS := -std=c2x -Wall -I $(INCDIR) -Werror -pedantic
 MAIN := main.c
 
 all: $(TARGET)
