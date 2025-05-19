@@ -45,3 +45,32 @@ void printSudoku(sudoku_t g) {
     }
     printf("\n");
 }
+
+void bubble_sort(uint8_t* arr, uint8_t n, uint8_t* idxs) {
+    bool swapped;
+
+    if (idxs)
+        for (uint8_t i = 0; i < n; ++i)
+            idxs[i] = i;
+            
+    for (uint8_t i = 0; i < n - 1; i++) {
+        swapped = false;
+        for (uint8_t j = 0; j < n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                // Intercambiar
+                uint8_t temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+                swapped = true;
+
+                if (idxs) {
+                    temp = idxs[j];
+                    idxs[j] = idxs[j + 1];
+                    idxs[j + 1] = temp;
+                }
+            }
+        }
+        if (!swapped)
+            break;
+    }
+}

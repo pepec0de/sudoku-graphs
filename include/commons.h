@@ -33,5 +33,6 @@ typedef bool adjm_t[GRAPH_ORDER][GRAPH_ORDER];
 void copySudoku(sudoku_t g1, sudoku_t g2);
 void clean(sudoku_t g);
 void printSudoku(sudoku_t g);
+void bubble_sort(uint8_t* arr, uint8_t n, uint8_t* idxs);
 
 #endif

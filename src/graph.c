@@ -24,6 +24,19 @@ GraphSet* initGraph(sudoku_t sudoku) {
         graph_set->k_bits_vct[c] = k_bits;
     }
 
+    graph_set->sorted_idx = malloc(GRAPH_ORDER * sizeof(uint8_t));
+    uint8_t* arr = malloc(GRAPH_ORDER * sizeof(uint8_t));
+    memcpy(arr, graph_set->labels, GRAPH_ORDER * sizeof(uint8_t));
+
+    bubble_sort(arr, GRAPH_ORDER, graph_set->sorted_idx);
+
+    printf("Sorted idx:\n");
+    for (uint8_t i = 0; i < GRAPH_ORDER; ++i)
+        printf("%d,", graph_set->sorted_idx[i]);
+    printf("\n\n");
+
+    free(arr);
+
     return graph_set;
 }
 
@@ -127,7 +140,7 @@ void searchGraphs(adjm_t graph, GraphSet* graph_set, uint8_t start, bool verbose
     para no tener que hacer la comprobacion de grafoCompleto y grafo no valido
     // Resultados: paraN = 3 N_GRAPHS = 93
     */
-
+    
     if (start == GRAPH_ORDER-1)
         return;
 
@@ -261,24 +274,6 @@ int_set_t compareEqualSet(GraphSet* graph_set) {
     return n_uniques;
 }
 
-void bubbleSort(uint8_t *arr, uint8_t n) {
-    bool swapped;
-    for (uint8_t i = 0; i < n - 1; i++) {
-        swapped = false;
-        for (uint8_t j = 0; j < n - i - 1; j++) {
-            if (arr[j] > arr[j + 1]) {
-                // Intercambiar
-                uint8_t temp = arr[j];
-                arr[j] = arr[j + 1];
-                arr[j + 1] = temp;
-                swapped = true;
-            }
-        }
-        if (!swapped)
-            break;
-    }
-}
-
 void take_mat_at(uint8_t l, GraphSet* graph_set, uint8_t matriz[N][N], adjm_t a1) {
     for (uint8_t i = 0; i < N; ++i)
             for (uint8_t j = 0; j < N; ++j)
@@ -297,7 +292,7 @@ void take_mat_at(uint8_t l, GraphSet* graph_set, uint8_t matriz[N][N], adjm_t a1
                 if (c2 == l)
                     break;
             }
-            bubbleSort(matriz[c1], N);
+            bubble_sort(matriz[c1], N, NULL);
             ++c1;
         }
     }
