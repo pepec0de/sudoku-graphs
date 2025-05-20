@@ -24,19 +24,6 @@ GraphSet* initGraph(sudoku_t sudoku) {
         graph_set->k_bits_vct[c] = k_bits;
     }
 
-    graph_set->sorted_idx = malloc(GRAPH_ORDER * sizeof(uint8_t));
-    uint8_t* arr = malloc(GRAPH_ORDER * sizeof(uint8_t));
-    memcpy(arr, graph_set->labels, GRAPH_ORDER * sizeof(uint8_t));
-
-    bubble_sort(arr, GRAPH_ORDER, graph_set->sorted_idx);
-
-    printf("Sorted idx:\n");
-    for (uint8_t i = 0; i < GRAPH_ORDER; ++i)
-        printf("%d,", graph_set->sorted_idx[i]);
-    printf("\n\n");
-
-    free(arr);
-
     return graph_set;
 }
 
@@ -110,9 +97,9 @@ void searchGraphs(adjm_t graph, GraphSet* graph_set, uint8_t start, bool verbose
 
     if (grafoCompleto) {
         if (verbose) {
-            if (graph_set->n_solutions % 1000 == 0)
-            printf("[VERBOSE] GRAPH %d\n", graph_set->n_solutions);
-            //printGraph(graph, graph_set);
+            if (N == 3 || (N > 3 && graph_set->n_solutions % 1000 == 0))
+                printf("[VERBOSE] GRAPH %d\n", graph_set->n_solutions);
+            if (N == 3) printGraph(graph, graph_set);
         }
 
         memcpy(graph_set->solutions[graph_set->n_solutions++], graph, sizeof(adjm_t));
@@ -220,6 +207,33 @@ void printGraph(adjm_t graph, GraphSet* graph_set) {
     printf("\n");
 }
 
+//////////////////////// SEARCH ALGORITHM
+/*
+Graph search algorithm: fill the rows with the lower degrees first in order to
+reduce the search tree at the top.
+
+Concept: nCr(n, k to 1) is much lower than nCr(n, k to n).
+*/
+
+void search_ordered_fill(GraphSet* graph_set, bool verbose) {
+    adjm_t zero;
+    cleanAdjm(zero);
+
+    uint8_t* sorted_idxs = malloc((GRAPH_ORDER-1) * sizeof(uint8_t));
+    uint8_t* arr = malloc((GRAPH_ORDER-1) * sizeof(uint8_t));
+    memcpy(arr, graph_set->labels, (GRAPH_ORDER-1) * sizeof(uint8_t));
+    bubble_sort(arr, (GRAPH_ORDER-1), sorted_idxs);
+    free(arr);
+
+    __search_ordered_fill(zero, graph_set, sorted_idxs, 0, verbose);
+}
+
+void __search_ordered_fill(adjm_t graph, GraphSet* graph_set, uint8_t* sorted_idxs, uint8_t idx, bool verbose) {
+
+}
+
+//////////////////////// COMPARE GRAPHS
+
 int_set_t compareSet(GraphSet* graph_set) {
     int_set_t n_uniques = 0;
     bool is_unique;
@@ -250,6 +264,21 @@ bool areEqualAdjm(adjm_t a1, adjm_t a2) {
     return true;
 }
 
+int_set_t hashCode(GraphSet* graph_set, int_set_t idx) {
+    int_set_t code = 0;
+    adjm_t graph;
+    memcpy(graph, graph_set->solutions[idx], sizeof(adjm_t));
+    // TODO: code hashCode func to check isomorphism between graphs
+    for (uint8_t i = 0; i < GRAPH_ORDER; ++i) {
+        for (uint8_t j = i+1; j < GRAPH_ORDER; ++j) {
+            if (graph[i][j])
+                code += graph_set->labels[i] * j;
+        }
+    }
+    return code;
+}
+
+// Check isomorphism between graphs
 int_set_t compareEqualSet(GraphSet* graph_set) {
     int_set_t n_uniques = 0;
     bool is_unique;
@@ -266,7 +295,7 @@ int_set_t compareEqualSet(GraphSet* graph_set) {
         }
         if (is_unique) {
             ++n_uniques;
-            printf("Unique %d\n", n_uniques);
+            printf("Unique %d, hashCode = %d\n", n_uniques, hashCode(graph_set, i));
             printGraph(graph_set->solutions[i], graph_set);
         }
     }

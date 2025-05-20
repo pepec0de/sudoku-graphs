@@ -32,7 +32,7 @@ int sudoku_graph_test() {
     adjm_t adjm;
 
     cleanAdjm(adjm);
-
+    printSudoku(base);
     printGraph(adjm, graph_set);
 
     searchGraphs(adjm, graph_set, 0, verbose);
