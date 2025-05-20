@@ -11,6 +11,8 @@ Graph structures based on sudoku's concepts.
 * ~~Implement sub-algo for binary sequences generation~~.
 * ~~Add code for graphical plots of graphs using GraphViz lib (Python script)~~.
 * ~~Add in GraphSet struct k_bits vector to optimize algorithm~~.
+* Code hashCode func to check isomorphism between graphs.
+  * Improve compareEqualSet (isomorphism) function.
 
 ## List of ideas
 
