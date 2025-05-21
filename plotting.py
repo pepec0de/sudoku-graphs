@@ -10,40 +10,6 @@ $ pip install graphviz
 import graphviz
 import math
 
-# Function to convert a string representation of an adjacency matrix to a 2D integer list
-def string_to_adjacency_matrix(labels_str, matrix_str):
-    # Split the string by lines, then by spaces to create the 2D list of integers
-    labels = list(map(int, labels_str.split(',')))
-    matrix = [list(map(int, row.split())) for row in matrix_str.strip().split('\n')]
-    return labels, matrix
-
-"""
-# old: adjacency_matrix_to_grid_dot() wrong style
-def adjacency_matrix_to_grid_dot(labels, adj_matrix):
-    dot = graphviz.Graph()
-    num_nodes = len(adj_matrix)
-    grid_size = int(num_nodes ** 0.5)  # Assuming a roughly square layout, like 5x5
-
-    # Add nodes and arrange them in a grid pattern
-    for i in range(num_nodes):
-        # Position nodes in a grid
-        dot.node(str(i), shape="circle", label=str(labels[i]), pos=f"{i % grid_size},{-(i // grid_size)}!")
-
-    # Add edges based on the adjacency matrix
-    for i in range(num_nodes):
-        for j in range(i + 1, num_nodes):  # Avoid duplicating edges in undirected graph
-            if adj_matrix[i][j] == 1:
-                dot.edge(str(i), str(j))
-    
-    # Set graph attributes for layout and fixed positioning
-    dot.attr(overlap="scale", splines="true")  # Improve edge routing
-    dot.attr(layout='neato')  # Use 'neato' layout engine
-    dot.attr(nodesep = '0.5')
-    dot.attr(rankdir = 'LR')
-    
-    return dot
-"""
-
 def adjacency_matrix_to_grid_dot(labels, adj_matrix, spacing=1.5):
     dot = graphviz.Graph(engine='neato')  # Usamos 'neato' para posicionar con coordenadas
 
@@ -74,30 +40,57 @@ def adjacency_matrix_to_grid_dot(labels, adj_matrix, spacing=1.5):
 
     return dot
 
-def plot_graph(labels, adj_mat):
-    # Convert to adjacency matrix
-    labels, adj_matrix = string_to_adjacency_matrix(labels, adj_mat)
-
+def plot_graph(name, dir, labels, adj_mat):
     # Generate and render the graph
-    dot = adjacency_matrix_to_grid_dot(labels, adj_matrix)
-    dot.render("grid_graph", format="png", view=True)
+    dot = adjacency_matrix_to_grid_dot(labels, adj_mat)
+    dot.render(filename=name, directory=dir, format="png", overwrite_source=True)
+
+def plot_graphs_from_file(nombre_fichero):
+    etiquetas = []
+    matrices_todos = []
+
+    with open(nombre_fichero, 'r') as f:
+        lineas = f.readlines()
+
+    i = 0
+    cont = 0
+    while i < len(lineas):
+        # Buscar inicio del grafo
+        if lineas[i].startswith("Unique"):
+            # Leer etiquetas
+            etiquetas_linea = lineas[i+1].strip().rstrip(',')
+            if not etiquetas:
+                etiquetas = list(map(int, etiquetas_linea.split(',')))
+
+            n = len(etiquetas)
+            matriz = [[0] * n for _ in range(n)]
+
+            # Saltar dos líneas: la de etiquetas de nodos (1 2 3 4 ...) y pasar a la matriz
+            i += 3
+            for fila in range(n):
+                linea = lineas[i + fila]
+                partes = linea.split(':', 1)
+                if len(partes) < 2:
+                    continue
+                valores = partes[1][1:]
+                valores = valores.replace('  ', '0').replace(' ', '').strip()
+                matriz[fila] = list(map(int, valores))
+
+            matrices_todos.append(matriz)
+            plot_graph(f"N{int(math.sqrt(n))}_unique_{cont+1}", "plots/", etiquetas, matriz)
+            cont += 1
+            
+            i += n  # Saltar a la próxima sección
+        else:
+            i += 1
+
+    return etiquetas, matrices_todos
 
 """
-Use of plot_graph() func
+etiquetas, matrices_todos = read_graphs("n4_63_sols_unicas_10k_soluciones_con_hashCode.dat")
 
-labels should be string vector like:
-(N=3): 
-labels = "1,2,3,2,3,1,3,1,2"
-and 
-adj_matrix = ""
-0 0 0 0 0 0 1 0 0
-0 0 0 0 1 0 1 0 0
-0 0 0 0 0 1 0 1 1
-0 0 0 0 1 0 1 0 0
-0 1 0 1 0 0 0 0 1
-0 0 1 0 0 0 0 0 0
-1 1 0 1 0 0 0 0 0
-0 0 1 0 0 0 0 0 0
-0 0 1 0 1 0 0 0 0
-""
+print(etiquetas)
+print(len(matrices_todos))
 """
+
+plot_graphs_from_file("n3.dat")
