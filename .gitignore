@@ -1,5 +1,10 @@
 # Simplified version of gitignore
 
+
+# Ignore dirs
+plots/
+results/
+
 # Log file
 *.log
 
