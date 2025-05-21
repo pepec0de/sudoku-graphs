@@ -268,19 +268,26 @@ int_set_t hashCode(GraphSet* graph_set, int_set_t idx) {
     int_set_t code = 0;
     adjm_t graph;
     memcpy(graph, graph_set->solutions[idx], sizeof(adjm_t));
+    int_set_t edge_mult;
     // TODO: code hashCode func to check isomorphism between graphs
     for (uint8_t i = 0; i < GRAPH_ORDER; ++i) {
-        for (uint8_t j = i+1; j < GRAPH_ORDER; ++j) {
+        edge_mult = 1;
+        for (uint8_t j = 0; j < GRAPH_ORDER; ++j) {
             if (graph[i][j])
-                code += graph_set->labels[i] * j;
+                edge_mult *= graph_set->labels[j];
         }
+        // original idea: 
+        //code += edge_mult;
+        //better:
+        code += graph_set->labels[i] * edge_mult;
     }
+    
     return code;
 }
 
 // Check isomorphism between graphs
 int_set_t compareEqualSet(GraphSet* graph_set) {
-    int_set_t n_uniques = 0;
+    int_set_t n_uniques = 0;//, hash_i, hash_j;
     bool is_unique;
 
     for (int_set_t i = 0; i < graph_set->n_solutions; ++i) {
@@ -289,7 +296,11 @@ int_set_t compareEqualSet(GraphSet* graph_set) {
         for (int_set_t j = 0; j < i; ++j) {
             
             if (areEqualGraph(graph_set, i, j)) {
+            //hash_i = hashCode(graph_set, i);
+            //hash_j = hashCode(graph_set, j); 
+            //if (hash_i == hash_j) {
                 is_unique = false;
+                //printf("NOT UNIQUES (hashCodes) %d == %d\n", hash_i, hash_j);
                 break;
             }
         }
