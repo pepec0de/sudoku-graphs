@@ -21,6 +21,13 @@ Graph structures based on sudoku's concepts.
 * Graph search algorithm: fill the rows with the lower degrees first in order to reduce the search tree at the top.
     * Concept: nCr(n, k to 1) is much lower than nCr(n, k to n).
 * Think and implement a new search algorithm.
+* Idea for hashCode function:
+    * Code (For N=3 case would only make sense to multiply edges set of nodes with label(v) = 3)
+```
+hash = 0
+for v in nodes:
+    hash += mult_all( edge_set(v) )
+```
 
 Thanks to Antonio.
 
