@@ -31,6 +31,103 @@ for v in nodes:
 
 Thanks to Antonio.
 
+* Permutation search:
+
+```
+mat graph[N][N]?
+
+Case N=3
+Graph representation:
+1 -> {..., ..., ...}
+2 -> {{...}, {...}, {...}}
+3 -> {{...}, {...}, {...}}
+
+permutations: n_possibilties?
+available_nodes = {2, 2, 2, 3, 3, 3}
+1 ->
+{2(1), 2(1), 2(1)}
+    2 -> {{1, ?}, {1, ?}, {1, ?}} 
+    to_complete = {2(1), 2(1), 2(1), 3(0), 3(0), 3(0)}
+    available_nodes(2) = {3(0), 3(0), 3(0)}
+    
+    # condition to backtrack here??
+
+    {{1, 3(1)}, {1, 3(1)}, {1, 3(1)}}
+        to_complete = {3(1), 3(1), 3(1)}
+        available_nodes(3) = {}
+        3 -> {{2(2), ?, ?}, {2(2), ?, ?}, {2(2), ?, ?}}
+            available_nodes == {} -> INVALID solution
+    
+    {..................}
+
+{2(1), 2(1), 3(1)}
+    2 -> {{1, ?}, {1, ?}, {?, ?}} 
+    to_complete = {2(1), 2(1), 2(0), 3(1), 3(0), 3(0)}
+    available_nodes(2) = {3(1), 3(0), 3(0)}
+    
+    {{1, 3(3)}, {1, 3(3)}, {3(1), 3(1)}}
+
+    {{1, 3(1)}, {1, 3(2)}, {3(2), 3(2)}}
+
+    {{1, 3(3)}, {1, 3(3)}, {3(3), 3(2)}}
+
+    {{1, 3(3)}, {1, 3(3)}, {3(3), 3(1)}}
+
+    {{1, 3(2)}, {1, 3(2)}, {3(2), 3(1)}}
+
+    ...???
+
+{2, 3, 3}
+    2 -> {{1, ?}, {?, ?}, {?, ?}}
+    to_complete = {2(1), 2(0), 2(0), 3(1), 3(1), 3(0)}
+    available_nodes(2) = {3(1), 3(1), 3(0)}
+
+{3, 3, 3}
+    2 -> {{?, ?}, {?, ?}, {?, ?}} 
+
+```
+
+* Permutation search (without considering relations):
+
+```
+Case N=3 (only 1 possible solution):
+
+1 -> { {3, 3, 3} }
+2 -> { {3, 3, 3}, {3, 3, 3} }
+3 -> { {1, 1, 1}, {2, 2, 2}, {2, 2, 2} }
+
+available_conns = {2(6), 3(9)}
+available(1) = {2(6), 3(9)}
+1 -> 
+{2, 2, 2}
+    available_conns = {2(3), 3(9)}
+    available(2) = {3(9)}
+    2 -> {{1, 1, 1}, ...}
+    {{1, 1, 1}, {3, 3, 3}}
+        available_conns = {2(3), 3(6)}
+        available(3) = {2(3)}
+        3 -> {{2, 2, 2}, ...}
+        {{2, 2, 2}, {2, 2, 2}, ...}
+        conns_needed = 6, conns_available = 3 -> BACKTRACK
+
+{2, 2, 3}
+    ...
+
+{2, 3, 3}
+    ...
+
+{3, 3, 3}
+    available_conns = {2(6), 3(6)}
+    available(2) = {3(6)}
+    2 -> {...}
+    {{3, 3, 3}, {3, 3, 3}}
+        available_conns = {2(6)}
+        available(3) = {2(6)}
+        3 -> {{1, 1, 1}, ...}
+        {{1, 1, 1}, {2, 2, 2}, {2, 2, 2}}
+        if available_conns == {} -> VALID SOLUTION
+```
+
 Simple graph search algorithm using backtracking:
 
 ```
