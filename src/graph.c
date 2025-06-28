@@ -265,21 +265,21 @@ bool areEqualAdjm(adjm_t a1, adjm_t a2) {
 }
 
 int_set_t hashCode(GraphSet* graph_set, int_set_t idx) {
-    int_set_t code = 0;
+    int_set_t code = 1;
     adjm_t graph;
     memcpy(graph, graph_set->solutions[idx], sizeof(adjm_t));
     int_set_t edge_mult;
     // TODO: code hashCode func to check isomorphism between graphs
     for (uint8_t i = 0; i < GRAPH_ORDER; ++i) {
-        edge_mult = 1;
+        edge_mult = 0;
         for (uint8_t j = 0; j < GRAPH_ORDER; ++j) {
             if (graph[i][j])
-                edge_mult *= graph_set->labels[j];
+                edge_mult += (graph_set->labels[j]);
         }
         // original idea: 
         //code += edge_mult;
         //better:
-        code += graph_set->labels[i] * edge_mult;
+        code *= edge_mult;
     }
     
     return code;
