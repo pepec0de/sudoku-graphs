@@ -38,9 +38,14 @@ mat graph[N][N]?
 
 Case N=3
 Graph representation:
-1 -> {..., ..., ...}
-2 -> {{...}, {...}, {...}}
-3 -> {{...}, {...}, {...}}
+
+element: eI_J,K where
+I: set number
+J: node group index
+K: edge's node index
+1 -> {{e1_1,1, e1_1,2, e1_1,3}}
+2 -> {{e2_1,1, e2_2,2, e2_1,3}, {e2_2,1, e2_2,2, e2_2,3}}
+3 -> {{e3_1,1, e3_2,2, e3_1,3}, {e3_2,1, e3_2,2, e3_2,3}, {e3_3,1, e3_3,2, e3_3,3}}
 
 permutations: n_possibilties?
 available_nodes = {2, 2, 2, 3, 3, 3}
